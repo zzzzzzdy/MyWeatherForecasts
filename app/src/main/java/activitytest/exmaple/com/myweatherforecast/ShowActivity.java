@@ -46,14 +46,14 @@ public class ShowActivity extends AppCompatActivity {
     }
 
     private void initData() {
-                OkHttp okHttp = OkHttp.getInstance();
+                HttpConnect httpConnect = HttpConnect.getInstance();
         try {
-            okHttp.sendRequest("https://www.apiopen.top/weatherApi?city="+city);
+            httpConnect.sendRequest("https://www.apiopen.top/weatherApi?city="+city);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        okHttp.setInterface(new OkHttp.MyInterface() {
+        httpConnect.setInterface(new HttpConnect.MyInterface() {
             @Override
             public void success(String result) {
                 Log.d("aaaaaaa",result+city);
