@@ -62,6 +62,9 @@ public class ShowActivity extends AppCompatActivity {
             }
         });
 
+        Director director = new Director(httpConnect);
+        director.construct();
+
     }
     private void parseJSON( String response){
         JSONObject jsonObject= null;

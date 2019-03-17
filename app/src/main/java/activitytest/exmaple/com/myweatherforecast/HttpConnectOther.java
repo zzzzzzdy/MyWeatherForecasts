@@ -10,9 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-
-
-public class HttpConnect extends HttpC {
+public class HttpConnectOther extends HttpC {
     //定义一个接口
     public interface MyInterface {
 
@@ -23,16 +21,16 @@ public class HttpConnect extends HttpC {
 
 
 
-    private static MyInterface myInterface;
+    private static HttpConnectOther.MyInterface myInterface;
     public void setInterface(MyInterface myInterface){
         this.myInterface = myInterface;
     }
-    private static volatile HttpConnect mHttpConnect;
-    private HttpConnect(){}
-    public static HttpConnect getInstance(){
+    private static volatile HttpConnectOther mHttpConnect;
+    private HttpConnectOther(){}
+    public static HttpConnectOther getInstance(){
         if(mHttpConnect == null){
-            synchronized (HttpConnect.class){
-                mHttpConnect = new HttpConnect();
+            synchronized (HttpConnectOther.class){
+                mHttpConnect = new HttpConnectOther();
             }
         }
         return mHttpConnect;
@@ -51,9 +49,11 @@ public class HttpConnect extends HttpC {
                 try {
                     URL url=new URL(path);
                     connection=(HttpURLConnection)url.openConnection();
-                    connection.setRequestMethod("GET");
+                    connection.setRequestMethod("POST");
                     connection.setConnectTimeout(7000);
                     connection.setReadTimeout(7000);
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
                     connection.setRequestProperty("Content-type", "application/json");
                     inputStream=connection.getInputStream();
 
