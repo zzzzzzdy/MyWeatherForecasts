@@ -25,25 +25,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ediStr = editText.getText().toString();
-                Intent intent = new Intent(MainActivity.this,ShowActivity.class);
-                intent.putExtra("city1",ediStr);
+                Intent intent = new Intent(MainActivity.this, ShowActivity.class);
+                intent.putExtra("city1", ediStr);
                 startActivity(intent);
             }
         });
-//        OkHttp okHttp = OkHttp.getInstance();
-//        try {
-//            okHttp.sendRequest("https://www.apiopen.top/weatherApi?city=重庆");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        okHttp.setInterface(new OkHttp.MyInterface() {
-//            @Override
-//            public void success(String result) {
-//                Log.d("aaaaaaa",result);
-//
-//            }
-//        });
+
 
     }
 }

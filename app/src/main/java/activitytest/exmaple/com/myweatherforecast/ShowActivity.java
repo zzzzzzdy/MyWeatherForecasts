@@ -48,7 +48,7 @@ public class ShowActivity extends AppCompatActivity {
     private void initData() {
                 HttpConnect httpConnect = HttpConnect.getInstance();
         try {
-            httpConnect.sendRequest("https://www.apiopen.top/weatherApi?city="+city);
+            httpConnect.sendRequestGet("https://www.apiopen.top/weatherApi?city="+city);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,14 +56,11 @@ public class ShowActivity extends AppCompatActivity {
         httpConnect.setInterface(new HttpConnect.MyInterface() {
             @Override
             public void success(String result) {
-                Log.d("aaaaaaa",result+city);
                 parseJSON(result);
 
             }
         });
 
-        Director director = new Director(httpConnect);
-        director.construct();
 
     }
     private void parseJSON( String response){
