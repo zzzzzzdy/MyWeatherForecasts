@@ -36,7 +36,7 @@ public class HttpConnect {
     final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 5, 1, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(100));
 
-    public void sendRequestGet(String path) throws IOException {
+    public void sendRequestGet(String path,final MyInterface listener) throws IOException {
 
         Runnable runnable = new Runnable() {
             @Override
@@ -65,15 +65,20 @@ public class HttpConnect {
                         }
                         mResult = response.toString();
                         inputStream.close();
-                        if (myInterface != null) {
-                            myInterface.success(mResult);
+                        if(listener!=null)
+                        {
+                            listener.success(mResult);
                         }
 
+
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        if (listener != null) {
+                            listener.onError(e);
+                        }
+
                     } finally {
                         if(connection!=null)connection.disconnect();
-                        if(mResult == null) mResult = "soory";
+
                     }
 
                 }
@@ -82,7 +87,7 @@ public class HttpConnect {
         };
         threadPoolExecutor.execute(runnable);
     }
-    public void sendRequestPost(String path, Map<String, String> form){
+    public void sendRequestPost(String path, Map<String, String> form,final MyInterface listener){
         Runnable runnable = new Runnable(){
 
             @Override
@@ -117,13 +122,16 @@ public class HttpConnect {
                         sb.append(line);
                     }
                     mResponse = sb.toString();
-                    if (myInterface != null) {
-                        myInterface.success(mResponse);
+                    if (listener != null) {
+                        listener.success(mResponse);
                     }
+
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    if (listener != null) {
+                        listener.onError(e);
+                    }
                 }finally{
                     try {
                         if(pw != null){
@@ -152,12 +160,9 @@ public class HttpConnect {
 
         //成功之后便开始解析得到的
         void success(String result);
+        void onError(Exception e);
     }
 
 
-    private static MyInterface myInterface;
 
-    public void setInterface(MyInterface myInterface) {
-        this.myInterface = myInterface;
-    }
 }

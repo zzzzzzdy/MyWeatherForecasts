@@ -48,18 +48,30 @@ public class ShowActivity extends AppCompatActivity {
     private void initData() {
                 HttpConnect httpConnect = HttpConnect.getInstance();
         try {
-            httpConnect.sendRequestGet("https://www.apiopen.top/weatherApi?city="+city);
+            httpConnect.sendRequestGet("https://www.apiopen.top/weatherApi?city=" + city, new HttpConnect.MyInterface() {
+                @Override
+                public void success(String result) {
+                    parseJSON(result);
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    parseJSON(e.toString());
+
+                }
+            });
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        httpConnect.setInterface(new HttpConnect.MyInterface() {
-            @Override
-            public void success(String result) {
-                parseJSON(result);
-
-            }
-        });
+//        httpConnect.setInterface(new HttpConnect.MyInterface() {
+//            @Override
+//            public void success(String result) {
+//                parseJSON(result);
+//
+//            }
+//        });
 
 
     }
