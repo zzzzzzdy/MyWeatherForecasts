@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShowActivity extends AppCompatActivity {
-    List<Data> datas=new ArrayList<Data>();
+    List<Data> datas = new ArrayList<Data>();
     ReAdapter recyclerAdapter;
     RecyclerView recyclerView;
     TextView textView;
@@ -37,56 +37,62 @@ public class ShowActivity extends AppCompatActivity {
         initData();
         textView = findViewById(R.id.ttv);
         textView.setText(city);
-        recyclerView=findViewById(R.id.rev);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL));
-        recyclerAdapter=new ReAdapter(datas,this);
+        recyclerView = findViewById(R.id.rev);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerAdapter = new ReAdapter(datas, this);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setLayoutManager(manager);
     }
 
     private void initData() {
-                HttpConnect httpConnect = HttpConnect.getInstance();
-        try {
-            httpConnect.sendRequestGet("https://www.apiopen.top/weatherApi?city=" + city, new HttpConnect.MyInterface() {
-                @Override
-                public void success(String result) {
-                    parseJSON(result);
-
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    parseJSON(e.toString());
-
-                }
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        httpConnect.setInterface(new HttpConnect.MyInterface() {
-//            @Override
-//            public void success(String result) {
-//                parseJSON(result);
+        //单例模式
+//                HttpConnect httpConnect = HttpConnect.getInstance();
+//        try {
+//            httpConnect.sendRequestGet("https://www.apiopen.top/weatherApi?city=" + city, new HttpConnect.MyInterface() {
+//                @Override
+//                public void success(String result) {
+//                    parseJSON(result);
 //
-//            }
-//        });
+//                }
+//
+//                @Override
+//                public void onError(Exception e) {
+//                    parseJSON(e.toString());
+//
+//                }
+//            });
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        //builder模式
+        TheOtherHttp theOtherHttp = new TheOtherHttp.Builder("https://www.apiopen.top/weatherApi?city=" + city).setMethod("GET").build();
+        theOtherHttp.sendRequest(new TheOtherHttp.Parsing() {
+            @Override
+            public void success(String result) {
+                parseJSON(result); }
+
+            @Override
+            public void onError(Exception e) {
+                parseJSON(e.toString()); }
+        });
 
 
     }
-    private void parseJSON( String response){
-        JSONObject jsonObject= null;
+
+    private void parseJSON(String response) {
+        JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(response);
-            JSONObject jsonObjectOne=new JSONObject(jsonObject.getString("data"));
-            JSONArray jsonArray=new JSONArray(jsonObjectOne.getString("forecast"));
+            JSONObject jsonObjectOne = new JSONObject(jsonObject.getString("data"));
+            JSONArray jsonArray = new JSONArray(jsonObjectOne.getString("forecast"));
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);
 
-                Data data=new Data(jsonObject2.getString("date"),jsonObject2.getString("high"),
-                        jsonObject2.getString("fengli"),jsonObject2.getString("low"),
-                        jsonObject2.getString("fengxiang"),jsonObject2.getString("type"));
+                Data data = new Data(jsonObject2.getString("date"), jsonObject2.getString("high"),
+                        jsonObject2.getString("fengli"), jsonObject2.getString("low"),
+                        jsonObject2.getString("fengxiang"), jsonObject2.getString("type"));
 
 
                 datas.add(data);
